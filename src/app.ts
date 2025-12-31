@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: config.corsOrigin,
+    origin: true, // Allow any origin
     credentials: true,
 }));
 app.use(helmet());
@@ -22,7 +22,7 @@ app.get('/health', (req, res) => {
 });
 
 import mongoose from 'mongoose';
-app.get('/debug-db', async (req, res) => {
+app.get('/api/debug-db', async (req, res) => {
     try {
         const state = mongoose.connection.readyState;
         const stateStr = ['disconnected', 'connected', 'connecting', 'disconnecting'][state] || 'unknown';
