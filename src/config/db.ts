@@ -7,7 +7,11 @@ export const connectDB = async () => {
             return;
         }
 
-        const conn = await mongoose.connect(config.mongoUri);
+        console.log('Connecting to MongoDB...');
+        const conn = await mongoose.connect(config.mongoUri, {
+            serverSelectionTimeoutMS: 5000, // Fail fast if IP is blocked
+        });
+
         if (conn.connection.host.includes('mongodb.net')) {
             console.log(`MongoDB Connected to Atlas Database: ${conn.connection.host}`);
         } else {
@@ -15,6 +19,7 @@ export const connectDB = async () => {
         }
     } catch (error) {
         console.error(`Error: ${(error as Error).message}`);
-        process.exit(1);
+        // Do not exit process in serverless, just throw so the handler catches it
+        throw error;
     }
 };
