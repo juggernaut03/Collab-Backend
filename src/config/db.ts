@@ -3,6 +3,10 @@ import { config } from './env';
 
 export const connectDB = async () => {
     try {
+        if (mongoose.connection.readyState >= 1) {
+            return;
+        }
+
         const conn = await mongoose.connect(config.mongoUri);
         if (conn.connection.host.includes('mongodb.net')) {
             console.log(`MongoDB Connected to Atlas Database: ${conn.connection.host}`);
